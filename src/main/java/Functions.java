@@ -3,10 +3,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -18,17 +15,162 @@ class Functions {
         function.accessDetailsFromAFile();
     }
 
-    void displayMembersDetails(HashMap<String, String> membersDetails){
-        System.out.println("Member Name  " + "ID");
+    void displayMembersDetails(){
+        HashMap<String, String> membersDetails = accessDetailsFromAFile();
+
+        System.out.println("ID  " + "NAME");
         for (String name : membersDetails.keySet()) {
             System.out.println( name + "  " + membersDetails.get(name));
+        }
+        System.out.println("\n");
+    }
+
+
+    @SuppressWarnings("unchecked")
+    void addMemberIntoAFile(){
+
+        HashMap<String, String> membersDetails = accessDetailsFromAFile();
+        boolean screenDone = false;
+
+        Scanner scannerObj = new Scanner(System.in);
+
+        while(!screenDone) {
+            // name of the member to be inserted into the file
+            System.out.println("Please enter the name");
+            String name = scannerObj.nextLine();
+
+            // id of the member to be inserted into the file
+            System.out.println("Please enter the id");
+            String id = scannerObj.nextLine();
+
+            membersDetails.put(id, name);
+
+            System.out.println("Please enter e to exit");
+            String exit = scannerObj.nextLine();
+            if (exit.equals("e")) {
+                screenDone = true;
+            }
+        }
+        writeIntoAFileFromHashMap(membersDetails);
+    }
+
+    void writeIntoAFileFromHashMap(HashMap<String, String>  memberDetailsToBeWrittenIntoAFile){
+        // create the JSONArray with JSONObject
+        // memberDetails
+        JSONArray memberList = new JSONArray();
+        JSONObject typeOfList = new JSONObject();
+
+        for (String id : memberDetailsToBeWrittenIntoAFile.keySet()) {
+
+            // make the JSON object with
+            // the key name and value id
+            // both are string type
+            JSONObject memberDetails = new JSONObject();
+            memberDetails.put("name", memberDetailsToBeWrittenIntoAFile.get(id));
+            memberDetails.put("id", id);
+
+            memberList.add(memberDetails);
+        }
+        typeOfList.put("members", memberList);
+        //Write JSON file
+        try (FileWriter file = new FileWriter("temp.json")) {
+
+            file.write(typeOfList.toJSONString());
+            file.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            File f = new File("members.json");           //file to be delete
+            f.delete();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter file = new FileWriter("members.json")) {
+
+            file.write(typeOfList.toJSONString());
+            file.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    void checkDuplicateIds(HashMap<String, String> membersDetails){
-        for (String name : membersDetails.keySet()) {
-            System.out.println( name + "  " + membersDetails.get(name));
+    void removeMemberFromAFile(){
+        System.out.println("Please select a option:\n" +
+                "(1) Remove by ID.\n" +
+                "(2) Remove by Name\n");
+
+        Scanner scannerObj = new Scanner(System.in);
+        String choice = scannerObj.nextLine();
+
+        switch (choice) {
+            case "1":
+                removeMember("ID");
+                break;
+            case "2":
+                removeMember("Name");
+                break;
+            default:
+                System.out.println("Invalid Selection!");
+                break;
         }
+    }
+
+    void removeMember(String removeBy){
+
+        HashMap<String, String> memberDetailsFromFile = accessDetailsFromAFile();
+        boolean screenDone = false;
+
+        Scanner scannerObj = new Scanner(System.in);
+
+        if(removeBy.equals("ID")){
+            while(!screenDone) {
+                // name of the member to be inserted into the file
+                System.out.println("Please enter the Id which you want to remove");
+                String idToBeRemoved = scannerObj.nextLine();
+                if(memberDetailsFromFile.containsKey(idToBeRemoved)){
+                    memberDetailsFromFile.remove(idToBeRemoved);
+                } else{
+                    System.out.println("File does not contain " + idToBeRemoved + " id.");
+                }
+                System.out.println("Do you want to remove more Members. " +
+                                   "Press y for Yes and n for No ");
+                String choice = scannerObj.nextLine();
+                if(choice.equals("n")){
+                    screenDone = true;
+                }
+            }
+        }
+        if(removeBy.equals("Name")){
+            while(!screenDone) {
+                // name of the member to be inserted into the file
+                System.out.println("Please enter the Name which you want to remove");
+                String nameToBeRemoved = scannerObj.nextLine();
+                if(memberDetailsFromFile.containsValue(nameToBeRemoved)){
+                    String idOfNameToBeRemoved = null;
+                    for (String id : memberDetailsFromFile.keySet()) {
+                        if(memberDetailsFromFile.get(id).equals(nameToBeRemoved)){
+                            idOfNameToBeRemoved = id;
+                        }
+                    }
+                    memberDetailsFromFile.remove(idOfNameToBeRemoved);
+                } else{
+                    System.out.println("File does not contain " + nameToBeRemoved + " name.");
+                }
+                System.out.println("Do you want to remove more members. " +
+                        "Press y for Yes and n for No ");
+                String choice = scannerObj.nextLine();
+                if(choice.equals("n")){
+                    screenDone = true;
+                }
+            }
+        }
+        writeIntoAFileFromHashMap(memberDetailsFromFile);
     }
 
     @SuppressWarnings("unchecked")
@@ -71,94 +213,6 @@ class Functions {
             e.printStackTrace();
         }
         return membersDetailsFromFile;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    void addMemberIntoAFile(){
-        HashMap<String, String>  memberDetailsFromFile = accessDetailsFromAFile();
-
-        boolean screenDone = false;
-
-        Scanner scannerObj = new Scanner(System.in);
-
-        while(!screenDone) {
-            // name of the member to be inserted into the file
-            System.out.println("Please enter the name");
-            String name = scannerObj.nextLine();
-
-            // id of the member to be inserted into the file
-            System.out.println("Please enter the id");
-            String id = scannerObj.nextLine();
-
-            memberDetailsFromFile.put(id, name);
-
-            System.out.println("Please enter e to exit");
-            String exit = scannerObj.nextLine();
-            if (exit.equals("e")) {
-                screenDone = true;
-            }
-        }
-
-        // create the JSONArray with JSONObject
-        // memberDetails
-        JSONArray memberList = new JSONArray();
-        JSONObject typeOfList = new JSONObject();
-
-        for (String name : memberDetailsFromFile.keySet()) {
-
-            // make the JSON object with
-            // the key name and value id
-            // both are string type
-            JSONObject memberDetails = new JSONObject();
-            memberDetails.put("name", memberDetailsFromFile.get(name));
-            memberDetails.put("id", name);
-
-            memberList.add(memberDetails);
-        }
-        typeOfList.put("members", memberList);
-        //Write JSON file
-        try (FileWriter file = new FileWriter("members.json")) {
-
-            file.write(typeOfList.toJSONString());
-            file.flush();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    void removeMemberFromAFile(){
-        HashMap<String, String>  memberDetailsFromFile = accessDetailsFromAFile();
-
-        System.out.println("Please select a option:\n" +
-                "(1) Remove by ID.\n" +
-                "(2) Remove by Name\n" +
-                "(0) Exit.\n");
-
-        boolean screenDone = false;
-
-        Scanner scannerObj = new Scanner(System.in);
-        String choice = scannerObj.nextLine();
-
-        switch (choice) {
-            case "1":
-                function.displayMembersDetails(membersDetails);
-                break;
-            case "2":
-                function.checkDuplicateIds(membersDetails);
-                break;
-            case "0":
-                screenDone=true;
-                break;
-            default:
-                System.out.println("Invalid Selection!");
-                break; }
-
-        while(!screenDone) {
-            // name of the member to be inserted into the file
-            System.out.println("Please enter the name");
-            String name = scannerObj.nextLine();
     }
 }
 
