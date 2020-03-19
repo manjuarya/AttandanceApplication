@@ -1,16 +1,17 @@
-/**
- * This class keeps all the methods
- * related to a member
- */
-
+import org.json.simple.parser.*;
+import org.json.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
+
+/**
+ * This class keeps all the methods
+ * related to a member
+ */
 
 class Functions {
 
@@ -28,6 +29,7 @@ class Functions {
             System.out.println( id + "  " + membersDetails.get(id));
         }
         System.out.println("\n");
+        //System.out.println(membersDetails.size());
     }
 
 
@@ -48,7 +50,11 @@ class Functions {
             System.out.println("Please enter the id");
             String id = scannerObj.nextLine();
 
-            membersDetails.put(id, name);
+            if(membersDetails.containsKey(id)){
+                System.out.println("id " + id + " is already exist. Please enter another id.");
+            } else{
+                membersDetails.put(id, name);
+            }
 
             System.out.println("Please enter to continue and e to exit");
             String exit = scannerObj.nextLine();
