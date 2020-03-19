@@ -25,7 +25,6 @@ class Controller {
                                "(3) Remove member from the file.\n" +
                                "(4) Take today's attendance.\n" +
                                "(5) Display attendance record.\n" +
-                               "(6) Update or Add student's record.\n" +
                                "(0) Exit.\n");
 
 

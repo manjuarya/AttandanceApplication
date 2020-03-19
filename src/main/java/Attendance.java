@@ -3,11 +3,13 @@
  * related to attendance.
  */
 
-
+import org.json.simple.parser.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import org.json.simple.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -83,7 +85,7 @@ public class Attendance {
 
         Scanner scannerObj = new Scanner(System.in);
 
-        File folder = new File("/Users/manjulataarya/Documents/pidAssigments/pid-exercise-2/attendanceFiles");
+        File folder = new File("/Please enter file path where attendance files are saved");
         File[] files = folder.listFiles();
         for (File file : files)
         {

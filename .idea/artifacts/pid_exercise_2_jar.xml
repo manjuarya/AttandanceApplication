@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="pid-exercise-2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/pid_exercise_2_jar</output-path>
+    <root id="archive" name="pid-exercise-2.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
