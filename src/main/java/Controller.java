@@ -10,14 +10,16 @@ class Controller {
     @SuppressWarnings("unchecked")
     public static void main( String[] args ) {
 
+        System.out.println("Welcome to the attendance application:");
+
         boolean screenDone = false;
 
         Functions function = new Functions();
+        Attendance attendance = new Attendance();
 
         while(!screenDone) {
 
-            System.out.println("Welcome to the attendance application: \n" +
-                               "Please select a below option:\n" +
+            System.out.println("Please select a below option:\n" +
                                "(1) Display members details.\n" +
                                "(2) Add member to the file.\n" +
                                "(3) Remove member from the file.\n" +
@@ -41,7 +43,13 @@ class Controller {
                     function.removeMemberFromAFile();
                     break;
                 case "4":
-                    //function.insertTheMemberDetails();
+                    attendance.takeAttendance();
+                    break;
+                case "5":
+                    attendance.accessDetailsFromAAttendanceFile();
+                    break;
+                case "6":
+                    //attendance.takeAttendance();
                     break;
                 case "0":
                     screenDone=true;

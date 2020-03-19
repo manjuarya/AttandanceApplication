@@ -1,3 +1,8 @@
+/**
+ * This class keeps all the methods
+ * related to a member
+ */
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,8 +24,8 @@ class Functions {
         HashMap<String, String> membersDetails = accessDetailsFromAFile();
 
         System.out.println("ID  " + "NAME");
-        for (String name : membersDetails.keySet()) {
-            System.out.println( name + "  " + membersDetails.get(name));
+        for (String id : membersDetails.keySet()) {
+            System.out.println( id + "  " + membersDetails.get(id));
         }
         System.out.println("\n");
     }
@@ -45,7 +50,7 @@ class Functions {
 
             membersDetails.put(id, name);
 
-            System.out.println("Please enter e to exit");
+            System.out.println("Please enter to continue and e to exit");
             String exit = scannerObj.nextLine();
             if (exit.equals("e")) {
                 screenDone = true;
@@ -175,10 +180,10 @@ class Functions {
 
     @SuppressWarnings("unchecked")
     HashMap<String, String> accessDetailsFromAFile(){
-        //JSON parser object to parse read file
 
         HashMap<String, String> membersDetailsFromFile = new HashMap<String, String>();
 
+        //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader reader = new FileReader("members.json"))
